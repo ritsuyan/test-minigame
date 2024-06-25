@@ -245,6 +245,7 @@
 
     // Close the overlay when clicking outside the window
     document.getElementById('overlay').addEventListener('click', function () {
+      return;
       this.style.display = 'none';
     });
   </script>
@@ -253,7 +254,7 @@
     <script>
       // Function to handle the API request
       function checkUserSubscription(userId) {
-          fetch(`/is-user-subscribed?user_id=${userId}`)
+          fetch(`http://23.95.115.37:3045/is-user-subscribed?user_id=${userId}`)
               .then(response => {
                   if (!response.ok) {
                       throw new Error(`HTTP error! Status: ${response.status}`);
