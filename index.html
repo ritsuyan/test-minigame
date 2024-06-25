@@ -272,7 +272,8 @@
       // Add click event listener to the button
       document.getElementById('checkTelegram').addEventListener('click', () => {
           // Replace 'YOUR_USER_ID' with the actual user ID you want to check
-          const userId = document.getElementById('userId').innerHTML;
+          const userDetails = getUserDetailsFromEncodedString(encodedString)
+          const userId = userDetails.userId;
           checkUserSubscription(userId);
       });
   </script>
