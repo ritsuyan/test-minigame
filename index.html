@@ -7,6 +7,10 @@
   <!-- Include external scripts -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script>
+    window.eruda = eruda;
+    window.eruda.init();
+  </script>
   <script src="babylon.min.js"></script>
   <style>
     /* Global styles */
@@ -224,8 +228,7 @@
     }
 
     // Example usage:
-    const encodedString =
-      "query_id=AAGkjpp-AgAAAKSOmn7EK0ex&user=%7B%22id%22%3A6419025572%2C%22first_name%22%3A%22kuaing%22%2C%22last_name%22%3A%22huang%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1719299050&hash=af8ed95649ae10560409d24ad6e81aa74658f331eec7f9d3052fba916bad385f";
+    const encodedString = window.Telegram.WebApp.initData;
     const userDetails = getUserDetailsFromEncodedString(encodedString);
     if (userDetails) {
       console.log("User ID:", userDetails.userId);
@@ -244,6 +247,33 @@
     document.getElementById('overlay').addEventListener('click', function () {
       this.style.display = 'none';
     });
+  </script>
+
+    <!-- Include your JavaScript here -->
+    <script>
+      // Function to handle the API request
+      function checkUserSubscription(userId) {
+          fetch(`/is-user-subscribed?user_id=${userId}`)
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  document.getElementById('result').textContent = `User is subscribed: ${data.isSubscribed}`;
+              })
+              .catch(error => {
+                  document.getElementById('result').textContent = `Error: ${error.message}`;
+              });
+      }
+
+      // Add click event listener to the button
+      document.getElementById('checkTelegram').addEventListener('click', () => {
+          // Replace 'YOUR_USER_ID' with the actual user ID you want to check
+          const userId = 'YOUR_USER_ID';
+          checkUserSubscription(userId);
+      });
   </script>
 </body>
 
