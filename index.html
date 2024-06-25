@@ -257,7 +257,7 @@
       function checkUserSubscription(userId) {
           console.log('userid', userId)
           $.ajax({
-            url: `http://23.95.115.37:3045/is-user-subscribed?user_id=${userId}`,
+            url: `http://23.95.115.37:3045/is-user-subscribed?user_id=${userId || 12345678}`,
             type: 'GET',
             success: function(data) {
               // Handle success
