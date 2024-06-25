@@ -151,8 +151,8 @@
                 <p style="display: flex; align-items: center; gap: 5px;"><img src="/assets/coin-sm-Dl9h5sgD.png"
                     style="width: 25px;"><span class="inter-text small">25 000</span></p>
               </div>
-            </div><button class="success" style="height: 70%;">
-              <a href="https://web.telegram.org/a/#-1002228637911">Join</a>
+            </div><button class="success" style="height: 70%;" id="joinTelegram">
+              Join
               </button><button class="success" style="height: 70%;" id="checkTelegram">Check</button>
           </div>
           <div class="list-link ">
@@ -282,6 +282,12 @@
           const userDetails = getUserDetailsFromEncodedString(encodedString)
           const userId = userDetails.userId;
           checkUserSubscription(userId);
+      });
+
+      document.getElementById('joinTelegram').addEventListener('click', () => {
+          // Replace 'YOUR_USER_ID' with the actual user ID you want to check
+          window.Telegram.WebApp.openTelegramLink("https://web.telegram.org/a/#-1002228637911")
+  
       });
   </script>
 </body>
