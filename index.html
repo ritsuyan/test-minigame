@@ -1,93 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Babylon.js game demo</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
-    <script>
-  // Initialize Eruda
-  eruda.init();
-</script>
-    <script src="babylon.min.js"></script>
-    <style>
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none;
-}
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-  margin: 0;
-  outline: none;
-  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
-}
-.btn-row {
-  position: absolute;
-  bottom: 80px;
-  width: 80%;
-  height: 120px;
-  left: 10%;
-  background-color: #444499;
-  border-radius: 10px;
-  text-align: center;
-}
-.btn-row .btn-col {
-  width: 24%;
-  font-size: 34px;
-  color: #FFFFFF;
-  display: inline-block;
-  text-align: center;
-  cursor: pointer;
-}
-.btn-row .btn-col:hover {
-  opacity: 0.8;
-}
-.btn-row .btn-col img {
-  width: 54px;
-  height: 54px;
-  margin: 8px auto;
-  display: block;
-  user-drag: none;
-  -webkit-user-drag: none;
-  user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-}
-    </style>
+  <meta charset="UTF-8">
+  <title>Babylon.js game demo</title>
+  <!-- Include external scripts -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+  <script src="babylon.min.js"></script>
+  <style>
+    /* Global styles */
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      /* Prevent scrolling */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+      margin: 0;
+      outline: none;
+      -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    }
+
+    /* Custom styles */
+    .btn-row {
+      position: absolute;
+      bottom: 80px;
+      width: 80%;
+      height: 120px;
+      left: 10%;
+      background-color: #444499;
+      border-radius: 10px;
+      text-align: center;
+      display: flex;
+      justify-content: space-around;
+      /* Distribute space evenly */
+    }
+
+    .btn-row .btn-col {
+      cursor: pointer;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin: 5px;
+      text-align: center;
+    }
+
+    .btn-row .btn-col:hover {
+      opacity: 0.8;
+    }
+
+    .btn-row .btn-col img {
+      width: 54px;
+      height: 54px;
+      margin: 8px auto;
+      display: block;
+      user-drag: none;
+      -webkit-user-drag: none;
+      user-select: none;
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1001;
+      cursor: pointer;
+    }
+
+    .window {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 75%;
+      height: 75%;
+      /* Adjusted to 3/4 of the screen height */
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 1002;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
 </head>
+
 <body>
   <canvas id="renderCanvas"></canvas>
   <script src="game.js"></script>
   <div class="btn-row">
-    <div class="btn-col">
+    <div class="btn-col" onclick="showWindow(1)">
       <img src="images/profile.png">
       <div>Profile</div>
     </div>
-    <div class="btn-col">
+    <div class="btn-col" onclick="showWindow(2)">
       <img src="images/earn.png">
       <div>Earn</div>
     </div>
-    <div class="btn-col">
+    <div class="btn-col" onclick="showWindow(3)">
       <img src="images/friends.png">
       Friends
     </div>
-    <div class="btn-col">
+    <div class="btn-col" onclick="showWindow(4)">
       <img src="images/boost.png">
       Boost
     </div>
   </div>
+  <div class="overlay" id="overlay">
+    <div class="window" id="window">
+      <div>
+        <h3>name: <p id="name"></p>
+        </h3>
+        <h3>user id: <p id="userId"></p>
+        </h3>
+      </div>
+      <div class="project-beer">
+        <div class="beer-div ">
+          <div class="list-link ">
+            <div style="gap: 5px;"><span></span>
+              <div>
+                <p class="lucky mid">Join Our Telegram Channel</p>
+                <p style="display: flex; align-items: center; gap: 5px;"><img src="/assets/coin-sm-Dl9h5sgD.png"
+                    style="width: 25px;"><span class="inter-text small">25 000</span></p>
+              </div>
+            </div><button class="success" style="height: 70%;">
+              <a href="https://web.telegram.org/a/#-1002228637911">Join</a>
+              </button><button class="success" style="height: 70%;" id="checkTelegram">Check</button>
+          </div>
+          <div class="list-link ">
+            <div style="gap: 5px;"><span></span>
+              <div>
+                <p class="lucky mid">Follow Our X Account</p>
+                <p style="display: flex; align-items: center; gap: 5px;"><img src="/assets/coin-sm-Dl9h5sgD.png"
+                    style="width: 25px;"><span class="inter-text small">25 000</span></p>
+              </div>
+            </div><button class="success" style="height: 70%;"><img
+                src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='512'%20height='512'%20x='0'%20y='0'%20viewBox='0%200%20511.985%20511.985'%20style='enable-background:new%200%200%20512%20512'%20xml:space='preserve'%20class=''%3e%3cg%3e%3cpath%20d='M500.088%2083.681c-15.841-15.862-41.564-15.852-57.426%200L184.205%20342.148%2069.332%20227.276c-15.862-15.862-41.574-15.862-57.436%200-15.862%2015.862-15.862%2041.574%200%2057.436l143.585%20143.585c7.926%207.926%2018.319%2011.899%2028.713%2011.899%2010.394%200%2020.797-3.963%2028.723-11.899l287.171-287.181c15.862-15.851%2015.862-41.574%200-57.435z'%20fill='%23ffffff'%20opacity='1'%20data-original='%23000000'%20class=''%3e%3c/path%3e%3c/g%3e%3c/svg%3e"
+                alt="" style="width: 14px;"></button>
+          </div>
+          <div class="list-link ">
+            <div style="gap: 5px;"><span></span>
+              <div>
+                <p class="lucky mid">Follow Our Tiktok Account</p>
+                <p style="display: flex; align-items: center; gap: 5px;"><img src="/assets/coin-sm-Dl9h5sgD.png"
+                    style="width: 25px;"><span class="inter-text small">25 000</span></p>
+              </div>
+            </div><button class="success" style="height: 70%;"><img
+                src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='512'%20height='512'%20x='0'%20y='0'%20viewBox='0%200%20511.985%20511.985'%20style='enable-background:new%200%200%20512%20512'%20xml:space='preserve'%20class=''%3e%3cg%3e%3cpath%20d='M500.088%2083.681c-15.841-15.862-41.564-15.852-57.426%200L184.205%20342.148%2069.332%20227.276c-15.862-15.862-41.574-15.862-57.436%200-15.862%2015.862-15.862%2041.574%200%2057.436l143.585%20143.585c7.926%207.926%2018.319%2011.899%2028.713%2011.899%2010.394%200%2020.797-3.963%2028.723-11.899l287.171-287.181c15.862-15.851%2015.862-41.574%200-57.435z'%20fill='%23ffffff'%20opacity='1'%20data-original='%23000000'%20class=''%3e%3c/path%3e%3c/g%3e%3c/svg%3e"
+                alt="" style="width: 14px;"></button>
+          </div>
+          <div class="list-link ">
+            <div style="gap: 5px;"><span></span>
+              <div>
+                <p class="lucky mid">Subscribe Our Youtube Channel</p>
+                <p style="display: flex; align-items: center; gap: 5px;"><img src="/assets/coin-sm-Dl9h5sgD.png"
+                    style="width: 25px;"><span class="inter-text small">25 000</span></p>
+              </div>
+            </div><button class="success" style="height: 70%;"><img
+                src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20version='1.1'%20xmlns:xlink='http://www.w3.org/1999/xlink'%20width='512'%20height='512'%20x='0'%20y='0'%20viewBox='0%200%20511.985%20511.985'%20style='enable-background:new%200%200%20512%20512'%20xml:space='preserve'%20class=''%3e%3cg%3e%3cpath%20d='M500.088%2083.681c-15.841-15.862-41.564-15.852-57.426%200L184.205%20342.148%2069.332%20227.276c-15.862-15.862-41.574-15.862-57.436%200-15.862%2015.862-15.862%2041.574%200%2057.436l143.585%20143.585c7.926%207.926%2018.319%2011.899%2028.713%2011.899%2010.394%200%2020.797-3.963%2028.723-11.899l287.171-287.181c15.862-15.851%2015.862-41.574%200-57.435z'%20fill='%23ffffff'%20opacity='1'%20data-original='%23000000'%20class=''%3e%3c/path%3e%3c/g%3e%3c/svg%3e"
+                alt="" style="width: 14px;"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getUserDetailsFromEncodedString(encodedStr) {
+      // First, decode the URL-encoded string
+      const decodedStr = decodeURIComponent(encodedStr);
+
+      // Use a regular expression to find the user object
+      const userRegex = /user=({.*?})/;
+      const match = decodedStr.match(userRegex);
+
+      if (match && match[1]) {
+        try {
+          // Parse the matched user object string into a JSON object
+          const userObj = JSON.parse(match[1].replace(/'/g,
+          '"')); // Replace single quotes with double quotes for valid JSON
+
+          // Extract the user ID and names
+          const userId = userObj.id;
+          const firstName = userObj.first_name;
+          const lastName = userObj.last_name;
+          const fullName = `${firstName} ${lastName}`.trim(); // Combine first and last name, and trim any whitespace
+
+          return {
+            userId: userId,
+            fullName: fullName
+          };
+        } catch (e) {
+          console.error("Error parsing user object:", e);
+          return null;
+        }
+      }
+
+      // If no user object is found, return null
+      return null;
+    }
+
+    // Example usage:
+    const encodedString =
+      "query_id=AAGkjpp-AgAAAKSOmn7EK0ex&user=%7B%22id%22%3A6419025572%2C%22first_name%22%3A%22kuaing%22%2C%22last_name%22%3A%22huang%22%2C%22language_code%22%3A%22en%22%2C%22allows_write_to_pm%22%3Atrue%7D&auth_date=1719299050&hash=af8ed95649ae10560409d24ad6e81aa74658f331eec7f9d3052fba916bad385f";
+    const userDetails = getUserDetailsFromEncodedString(encodedString);
+    if (userDetails) {
+      console.log("User ID:", userDetails.userId);
+      console.log("Full Name:", userDetails.fullName);
+      document.getElementById('name').innerHTML = userDetails.fullName;
+      document.getElementById('userId').innerHTML = userDetails.userId;
+    }
+  </script>
+  <script>
+    // Function to show the window with a number
+    function showWindow(number) {
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    // Close the overlay when clicking outside the window
+    document.getElementById('overlay').addEventListener('click', function () {
+      this.style.display = 'none';
+    });
+  </script>
 </body>
+
 </html>
