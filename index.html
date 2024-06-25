@@ -256,8 +256,16 @@
       // Function to handle the API request
       function checkUserSubscription(userId) {
           console.log('userid', userId)
-          $.get(`http://23.95.115.37:3045/is-user-subscribed?user_id=${userId}`, function( data ) {
-            console.log(data)
+          $.ajax({
+            url: `http://23.95.115.37:3045/is-user-subscribed?user_id=${userId}`,
+            type: 'GET',
+            success: function(data) {
+              // Handle success
+              console.log(data)
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              console.error('AJAX error:', textStatus, errorThrown);
+            }
           });
           // fetch(`http://23.95.115.37:3045/is-user-subscribed?user_id=${userId}`)
           //     .then(response => {
