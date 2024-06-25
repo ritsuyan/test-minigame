@@ -261,17 +261,17 @@
                   return response.json();
               })
               .then(data => {
-                  document.getElementById('result').textContent = `User is subscribed: ${data.isSubscribed}`;
+                  window.alert(`User is subscribed: ${data.isSubscribed}`);
               })
               .catch(error => {
-                  document.getElementById('result').textContent = `Error: ${error.message}`;
+                  window.alert(document.getElementById('result').textContent = `Error: ${error.message}`);
               });
       }
 
       // Add click event listener to the button
       document.getElementById('checkTelegram').addEventListener('click', () => {
           // Replace 'YOUR_USER_ID' with the actual user ID you want to check
-          const userId = 'YOUR_USER_ID';
+          const userId = document.getElementById('userId').innerHTML;
           checkUserSubscription(userId);
       });
   </script>
