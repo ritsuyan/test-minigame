@@ -257,7 +257,7 @@
       function checkUserSubscription(userId) {
           console.log('userid', userId)
           $.ajax({
-            url: `http://23.95.115.37:3045/is-user-subscribed?user_id=${userId || 12345678}`,
+            url: `http://23.95.115.37:3045/is-user-subscribed?user_id=${userId}`,
             type: 'GET',
             success: function(data) {
               // Handle success
@@ -286,10 +286,10 @@
       // Add click event listener to the button
       document.getElementById('checkTelegram').addEventListener('click', () => {
           // Replace 'YOUR_USER_ID' with the actual user ID you want to check
-          const encodedString = window.Telegram.WebApp.initData;
-          const userDetails = getUserDetailsFromEncodedString(encodedString)
-          const userId = userDetails.userId;
-          checkUserSubscription(userId);
+          // const encodedString = window.Telegram.WebApp.initData;
+          // const userDetails = getUserDetailsFromEncodedString(encodedString)
+          // const userId = userDetails.userId;
+          checkUserSubscription(12345677);
       });
 
       document.getElementById('joinTelegram').addEventListener('click', () => {
