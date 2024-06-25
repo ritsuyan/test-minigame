@@ -254,6 +254,7 @@
     <script>
       // Function to handle the API request
       function checkUserSubscription(userId) {
+          console.log('userid', userId)
           fetch(`http://23.95.115.37:3045/is-user-subscribed?user_id=${userId}`)
               .then(response => {
                   if (!response.ok) {
@@ -272,6 +273,7 @@
       // Add click event listener to the button
       document.getElementById('checkTelegram').addEventListener('click', () => {
           // Replace 'YOUR_USER_ID' with the actual user ID you want to check
+          const encodedString = window.Telegram.WebApp.initData;
           const userDetails = getUserDetailsFromEncodedString(encodedString)
           const userId = userDetails.userId;
           checkUserSubscription(userId);
